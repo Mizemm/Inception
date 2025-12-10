@@ -1,18 +1,36 @@
-services:
+zservices:
     mariadb:
-        build: ./requirements/mariadb
         container_name: mariadb
+        build: ./requirements/mariadb
+        image: mariadb:v1
         env_file:
             - .env
         volumes:
             - mariadb:/var/lib/mysql
         networks:
             - inception
-
-
+    wordpress:
+        container_name: wordpress
+        build: ./requirements/wordpress
+        image: wordpress:v1
+        depends_on:
+            - mariadb
+        env_file:
+            - .env
+        volumes:
+            -wordpress:/var/www/html
+        networks:
+            - inception
+    ngnix:
+        container_name: ngnix
+        build: ./requirements/ngnix
+        image: ngnix:v1
+        ports:
+            - "443.443"
 
 volumes:
     mariadb:
 
 networks:
     inception:
+        name: inception
