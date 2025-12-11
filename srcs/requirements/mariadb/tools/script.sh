@@ -3,11 +3,11 @@
 
 # Before MariaDB really starts we need to :
 # Create a database
-echo "CREATE DATABASE IF NOT EXISTS $MYSQL_NAME ;" > db1.sql
+echo "CREATE DATABASE IF NOT EXISTS $MYSQL_HOST ;" > db1.sql
 # Create a user
 echo "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD' ;" >> db1.sql
 # Give that user permissions
-echo "GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO '$MYSQL_USER'@'%' ;" >> db1.sql
+echo "GRANT ALL PRIVILEGES ON $MYSQL_HOST.* TO '$MYSQL_USER'@'%' ;" >> db1.sql
 # Change root password
 echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' ;" >> db1.sql
 # Save changes

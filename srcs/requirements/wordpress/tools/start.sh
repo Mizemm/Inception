@@ -9,36 +9,24 @@ done
 
 # If wp-config.php doesn't exist, create it
 if [ ! -f /var/www/wordpress/wp-config.php ]; then
-	echo "Creating wp-config.php"
+    wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER \
+        --dbpass=$MYSQL_PASSWORD --dbhost=$MYSQL_HOST --allow-root  --skip-check
+
 
 # Copy default wp-config
 cp /var/www/wordpress/wp-config-sample.php /var/www/wordpress/wp-config.php
 
-# Apply credentials in wp-config.php
-sed -i "s/database_name_here/$MYSQL_DATABASE/" /var/www/wordpress/wp-config.php
-sed -i "s/username_here/$MYSQL_USER/" /var/www/wordpress/wp-config.php
-sed -i "s/password_here/$MYSQL_PASSWORD/" /var/www/wordpress/wp-config.php
-sed -i "s/localhost/$MYSQL_HOST/" /var/www/wordpress/wp-config.php
 
-# Set unique security keys automatically
-curl -s https://api.wordpress.org/secret-key/1.1/salt/ > /tmp/wp.keys
-sed -i "/AUTH_KEY/d" /var/www/wordpress/wp-config.php
-sed -i "/SECURE_AUTH_KEY/d" /var/www/wordpress/wp-config.php
-sed -i "/LOGGED_IN_KEY/d" /var/www/wordpress/wp-config.php
-sed -i "/NONCE_KEY/d" /var/www/wordpress/wp-config.php
-sed -i "/AUTH_SALT/d" /var/www/wordpress/wp-config.php
-sed -i "/SECURE_AUTH_SALT/d" /var/www/wordpress/wp-config.php
-sed -i "/LOGGED_IN_SALT/d" /var/www/wordpress/wp-config.php
-sed -i "/NONCE_SALT/d" /var/www/wordpress/wp-config.php
-sed -i "49 r /tmp/wp.keys" /var/www/wordpress/wp-config.php
+# installing wordpress and creating admin user
+wp core install --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADMIN_USR \
+    --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL \
+    --allow-root
 
-echo "✔️ wp-config.php created!"
-fi
+# creating additional user
+wp user create $WP_USR $WP_EMAIL --role=author --user_pass=$WP_PWD --allow-root
 
-# Correct permissions
-chown -R www-data:www-data /var/www/wordpress
+# setting permission so it can change on wp-content file
+chmod 777 /var/www/wordpress/wp-content
 
-echo "🚀 Starting PHP-FPM..."
-
-# Run PHP-FPM in foreground (PID 1)
-exec php-fpm7.4 -F
+# running PHP-FPM in foreground so Docker keeps the container running.
+/usr/sbin/php-fpm7.3 -F

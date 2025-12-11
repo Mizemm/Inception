@@ -1,4 +1,4 @@
-zservices:
+services:
     mariadb:
         container_name: mariadb
         build: ./requirements/mariadb
@@ -18,19 +18,24 @@ zservices:
         env_file:
             - .env
         volumes:
-            -wordpress:/var/www/html
+            - wordpress:/var/www/wordpress
         networks:
             - inception
-    ngnix:
-        container_name: ngnix
-        build: ./requirements/ngnix
-        image: ngnix:v1
+        # Exposing 9000: allow other containers to talk to PHP-FPM internally
+        expose:
+            - "9000"
+    nginx:
+        container_name: nginx
+        build: ./requirements/nginx
+        image: nginx:v1
         ports:
-            - "443.443"
+            - "443:443"
+
 
 volumes:
     mariadb:
-
+    wordpress:
+    
 networks:
     inception:
         name: inception
