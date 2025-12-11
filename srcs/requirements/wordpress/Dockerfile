@@ -1,21 +1,20 @@
 FROM debian:bullseye
 
+RUN apt-get update && apt-get install -y \
+    php-fpm \
+    php-mysql \
+    default-mysql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /run/php
 
-# this line is for updating packages and installing php-fpm and php-mysql packages
-RUN apt-get update && 
-# php-fpm (FastCGI Process Manager) is used to execute PHP scripts
-RUN apt-get install -y php-fpm 
-# php-mysql allows PHP to communicate with MySQL databases
-RUN apt-get install -y php-mysql
-# curl package is for transferring data using various network protocols, including HTTP, HTTPS, and FTP.
-RUN apt install curl -y
+# Install WP-CLI
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x wp-cli.phar \
+    && mv wp-cli.phar /usr/local/bin/wp
 
+COPY tools/script.sh /tools/script.sh
+RUN chmod +x /tools/script.sh
 
-# this is for copying our settings in thew wordpress .sh file
-COPY tools/start.sh /
-# this is for copying our settings in thew wordpress .php file
-COPY tools/wp-config.php /
-
-
-# this is for running the script
-CMD [/tools/start.sh]
+EXPOSE 9000
+CMD ["/tools/script.sh"]

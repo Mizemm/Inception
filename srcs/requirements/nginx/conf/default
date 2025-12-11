@@ -4,6 +4,7 @@ server {
 
 
     ### SSL certificates generated in Dockerfile
+    
     ssl_certificate     /etc/ssl/certs/mizem.crt;
     ssl_certificate_key /etc/ssl/private/mizem.key;
 
@@ -11,10 +12,12 @@ server {
     ### Root directory of WordPress, When someone visits a directory (like https://mizem.42.fr/)
     ### Nginx looks for default files in this order:
     ### index.php: most WordPress sites use this, index.html: fallback if no PHP file exists
+    
     root /var/www/wordpress;
     index index.php index.html;
 
     ### Allow Nginx to read WP content
+
     location / {
         try_files $uri $uri/ /index.php?$args;
     }
@@ -24,6 +27,7 @@ server {
     ### WordPress is mostly PHP; Nginx cannot execute PHP by itself. 
     ### This block connects Nginx to PHP-FPM.
     ### Without it PHP files will just download in the browser or give a 502 error.
+    
     location ~ \.php$ {
         include fastcgi_params;
         fastcgi_pass wordpress:9000;
@@ -32,6 +36,7 @@ server {
 
 
     ### Deny access to hidden files like .htaccess
+
     location ~ /\.ht {
         deny all;
     }
@@ -41,6 +46,7 @@ server {
 ### Listens on HTTP (unencrypted) traffic.
 ### Only responds to requests for your domain.
 ### Redirects all HTTP traffic to HTTPS (port 443)
+
 server {
     listen 80;
     server_name mizem.42.fr;

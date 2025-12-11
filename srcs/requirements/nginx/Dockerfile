@@ -16,7 +16,8 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -subj "/C=MA/ST=Tetouan/L=Tetouan/O=1337/OU=mizem/CN=mizem.42.fr"
 
 # copying my own SETTINGS into nginx default direc
-COPY ./conf/default /etc/nginx/sites-available/default
+COPY conf/default /etc/nginx/sites-available/default
 
+RUN chmod +x /etc/nginx/sites-available/default
 # Start Nginx in foreground so the container doesnt quit
 CMD ["nginx", "-g", "daemon off;"]
