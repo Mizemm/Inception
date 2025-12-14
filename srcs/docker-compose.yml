@@ -2,7 +2,6 @@ services:
     mariadb:
         container_name: mariadb
         build: ./requirements/mariadb
-        image: mariadb:v1
         env_file:
             - /home/mizem/data/srcs/.env
         volumes:
@@ -12,7 +11,6 @@ services:
     wordpress:
         container_name: wordpress
         build: ./requirements/wordpress
-        image: wordpress:v1
         depends_on:
             - mariadb
         env_file:
@@ -24,10 +22,10 @@ services:
         # Exposing 9000: allow other containers to talk to PHP-FPM internally
         expose:
             - "9000"
+        restart : always
     nginx:
         container_name: nginx
         build: ./requirements/nginx
-        image: nginx:v1
         depends_on:
             - wordpress
         ports:
@@ -35,11 +33,26 @@ services:
         networks:
             - inception
         env_file:
-            - /home/mizem/data/srcs/.env
+            - /home/mizem/data/srcs/.env    
+        volumes:
+            - wordpress:/var/www/html
+        restart : always
 
 volumes:
-    mariadb:
-    wordpress:
+
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DB_VOLUME_PATH}
+
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${WP_VOLUME_PATH}
     
 networks:
     inception:

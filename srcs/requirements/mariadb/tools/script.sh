@@ -1,27 +1,27 @@
 #!/bin/bash
 
+# service mariadb start
 
-# Ensure data directory exists
-mkdir -p /var/lib/mysql
-chown -R mysql:mysql /var/lib/mysql
-
-
-# Before MariaDB really starts we need to :
-# Create a database
-echo "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE ;" > db.sql
-
-# Create a user
-echo "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD' ;" >> db.sql
-
-# Give that user permissions
-echo "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' ;" >> db.sql
-
-# Change root password
-echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' ;" >> db.sql
-
-# Save changes
-echo "FLUSH PRIVILEGES;" >> db.sql
+# # service mysql start
+# mysql -h localhost -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+# mysql -h localhost -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+# mysql -h localhost -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';"
+# # mysql -u$MYSQL_ROOT_USER -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$MYSQL_ROOT_PASSWORD'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+# mysql -h localhost -e "FLUSH PRIVILEGES;"
+# mysqladmin -u$MYSQL_ROOT_USER -p$MYSQL_ROOT_PASSWORD shutdown
 
 
-# starts the maria db server as pid1, and prints the errors in terminal so docker can handle them
-exec mysqld --console
+# exec mysqld --console
+
+service mariadb start
+# sleep 3
+
+
+mariadb -h localhost -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
+mariadb -h localhost -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mariadb -h localhost -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%';"
+mariadb -h localhost -e "FLUSH PRIVILEGES;"
+
+mysqladmin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
+
+exec "$@"
