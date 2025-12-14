@@ -16,7 +16,7 @@ services:
         env_file:
             - /home/mizem/data/srcs/.env
         volumes:
-            - wordpress:/var/www/wordpress
+            - wordpress:/var/www/html
         networks:
             - inception
         # Exposing 9000: allow other containers to talk to PHP-FPM internally
