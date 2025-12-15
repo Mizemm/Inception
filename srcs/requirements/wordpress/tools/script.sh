@@ -56,7 +56,7 @@ else
 fi
 
 # Ensure WordPress files are owned by www-data (Nginx/PHP user)
-chown -R www-data:www-data /var/www/html# Prepare PHP-FPM runtime directory
+chown -R www-data:www-data /var/www/html
 
 # Prepare PHP-FPM runtime directory
 mkdir -p /run/php
