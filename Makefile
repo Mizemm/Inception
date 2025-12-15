@@ -8,8 +8,15 @@ DB_DATA=${HOME}/data/mariadb
 
 all: up
 
+# Create bind-mount directories
+dirs:
+	mkdir -p $(WP_DATA)
+	mkdir -p $(DB_DATA)
+	sudo chown -R $(USER):$(USER) $(HOME)/data
+	sudo chmod -R 755 $(HOME)/data
+
 # Starting containers
-up:
+up:dirs
 	@echo "Starting ..."
 	$(DOCKER_COMPOSE) up --build
 
