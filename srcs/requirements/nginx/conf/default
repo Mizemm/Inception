@@ -1,24 +1,42 @@
 server {
+
+    # Listens on port 443 (HTTPS)
+    # 'ssl' enables TLS/SSL for encrypted connections
     listen 443 ssl;
     server_name mizem.42.fr;
 
+    # Restricts SSL to only TLS version 1.3
     ssl_protocols TLSv1.3;
+    # Path to the SSL certificate file used by Nginx
     ssl_certificate     /etc/ssl/certs/nginx-selfsigned.crt;
+    # Path to the private key associated with the SSL certificate
     ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
 
+    # Root directory where the website files are located
     root /var/www/html;
+    # Default files to serve when accessing a directory
     index index.php index.html;
 
     location / {
+        # Tries to serve the requested file directly
+        # If it doesn't exist, returns a 404 error
         try_files $uri $uri/ =404;
     }
 
     location ~ \.php$ {
+        # Sends PHP requests to the PHP-FPM service
+        # Port 9000 is the default PHP-FPM listening port
+
         include snippets/fastcgi-php.conf;
         fastcgi_pass wordpress:9000;
     }
 
+    # Denies access to hidden .ht* files to improve security
     location ~ /\.ht {
         deny all;
     }
 }
+
+
+# This Nginx server block serves a WordPress site over HTTPS using TLS 1.3
+# and forwards PHP requests to a PHP-FPM container over Docker networking.
