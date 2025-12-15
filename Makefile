@@ -6,16 +6,12 @@ DOCKER_COMPOSE=docker compose -f srcs/docker-compose.yml
 WP_DATA=${HOME}/data/wordpress
 DB_DATA=${HOME}/data/mariadb
 
-
-# build containers (detached)
-build:
-	@echo "Building ..."
-	$(DOCKER_COMPOSE) build
+all: up
 
 # Starting containers
 up:
 	@echo "Starting ..."
-	$(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up --build
 
 # Follow logs
 logs:
