@@ -31,9 +31,9 @@ clean:
 fclean: clean
 	@echo "Full cleaning..."
 # 	sudo chown -R $(USER):$(USER) $(WP_DATA)
-	sudo rm -rf $(WP_DATA)/*
+	sudo rm -rf $(WP_DATA)
 # 	sudo chown -R $(USER):$(USER) $(DB_DATA)
-	sudo rm -rf $(DB_DATA)/*
+	sudo rm -rf $(DB_DATA)
 
 re: fclean all
 
