@@ -11,7 +11,7 @@ RUN apt -y update && apt upgrade -y \
     vim \
     mariadb-client
 
-# Install WP-CLI that lets you manage WordPress entirely from the command line instead of using the web dashboard.
+# Downloads and installs WP-CLI → allows wp core install, wp user create, in your script.
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp

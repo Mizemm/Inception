@@ -31,7 +31,7 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     sed -i "s/localhost/${MYSQL_HOST}/" /var/www/html/wp-config.php
 fi
 
-# Check if WordPress core is installed
+# Check if WordPress core (WP Website) is installed
 if ! wp core is-installed --allow-root; then
     echo "Installing WordPress..."
 

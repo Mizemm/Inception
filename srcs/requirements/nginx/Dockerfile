@@ -17,7 +17,7 @@ RUN openssl req -x509 -nodes -days 365 \
     -newkey rsa:2048 \
     -keyout /etc/ssl/private/nginx-selfsigned.key \
     -out /etc/ssl/certs/nginx-selfsigned.crt \
-    -subj "/C=MA/ST=Kenitra/L=Keni/O=42/CN=mizem.42.fr"
+    -subj "/C=MA/ST=Tetouan/L=Tet/O=42/CN=mizem.42.fr"
 
 # Copy the custom Nginx server configuration
 COPY conf/default /etc/nginx/sites-available/default
